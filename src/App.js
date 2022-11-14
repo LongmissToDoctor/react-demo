@@ -1,10 +1,6 @@
 import IndexRouter from './router/indexRouter';
 function App() {
-  return (
-    <div className='App'>
-      <IndexRouter />
-    </div>
-  );
+  return <IndexRouter />;
 }
 
 export default App;
