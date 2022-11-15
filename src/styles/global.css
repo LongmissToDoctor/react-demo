@@ -11,3 +11,15 @@ body {
 .ant-menu-sub {
   background: rgb(44, 44, 148, 0.1) !important;
 }
+
+/* ::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  position: absolute;
+} */
+::-webkit-scrollbar-thumb {
+  background-color: #1890ff;
+}
+/* ::-webkit-scrollbar-track {
+  background-color: #ddd;
+} */
