@@ -5,7 +5,6 @@ const Home = React.memo(() => {
   const onClickHandler = () => {
     // 查询 get
     // axios.get('http://localhost:5000/posts/1').then(res => {
-    //   console.log(res.data, 'res----');
     // });
     // 新增 post
     // axios.post('http://localhost:5000/posts', {
@@ -24,12 +23,9 @@ const Home = React.memo(() => {
     // axios.delete('http://localhost:5000/posts/2');
     // _embed  嵌入
     // axios.get('http://localhost:5000/posts?_embed=comments').then(res => {
-    //   console.log(res);
     // });
     // _expand  拓展
-    axios.get('http://localhost:5000/comments?_expand=post').then(res => {
-      console.log(res.data);
-    });
+    axios.get('http://localhost:5000/comments?_expand=post').then(res => {});
   };
   return <div onClick={onClickHandler}>Home</div>;
 });

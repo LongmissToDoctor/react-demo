@@ -23,3 +23,12 @@ body {
 /* ::-webkit-scrollbar-track {
   background-color: #ddd;
 } */
+
+.logo {
+  line-height: 32px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.3);
+  font-size: 18px;
+  margin: 10px;
+  text-align: center;
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Button, Modal } from 'antd';
+import { Table, Tag, Button, Modal, Popover, Switch } from 'antd';
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
@@ -13,7 +13,10 @@ const RightList = React.memo(() => {
       setDataSource(dataSource.filter(data => data.id !== item.id));
       axios.delete(`http://localhost:5000/rights/${item.id}`);
     } else {
-      console.log(item.id);
+      let list = dataSource.filter(data => data.id === item.rightId);
+      list[0].children = list[0].children.filter(data => data.id !== item.id);
+      setDataSource([...dataSource]);
+      axios.delete(`http://localhost:5000/children/${item.id}`);
     }
   };
 
@@ -34,6 +37,20 @@ const RightList = React.memo(() => {
     });
   };
 
+  const onSwitchChange = item => {
+    item.pagepermisson = item.pagepermisson === 1 ? 0 : 1;
+    setDataSource([...dataSource]);
+    if (item.grade === 1) {
+      axios.patch(`http://localhost:5000/rights/${item.id}`, {
+        pagepermisson: item.pagepermisson,
+      });
+    } else {
+      axios.patch(`http://localhost:5000/children/${item.id}`, {
+        pagepermisson: item.pagepermisson,
+      });
+    }
+  };
+
   const columns = [
     {
       title: 'ID',
@@ -42,7 +59,7 @@ const RightList = React.memo(() => {
     },
     {
       title: '权限名称',
-      dataIndex: 'label',
+      dataIndex: 'title',
     },
     {
       title: '权限路径',
@@ -59,7 +76,23 @@ const RightList = React.memo(() => {
             icon={<DeleteOutlined />}
             onClick={() => showDeleteConfirm(item)}
           ></Button>
-          <Button shape='circle' type='primary' icon={<EditOutlined />}></Button>
+          <Popover
+            style={{ textAlign: 'center' }}
+            content={
+              <div style={{ textAlign: 'center' }}>
+                <Switch checked={!!item.pagepermisson} onChange={() => onSwitchChange(item)} />
+              </div>
+            }
+            title='页面配置项'
+            trigger={item.pagepermisson === undefined ? '' : 'click'}
+          >
+            <Button
+              shape='circle'
+              type='primary'
+              icon={<EditOutlined />}
+              disabled={item.pagepermisson === undefined}
+            ></Button>
+          </Popover>
         </div>
       ),
     },

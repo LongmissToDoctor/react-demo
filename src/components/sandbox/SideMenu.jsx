@@ -5,14 +5,12 @@ import {
   withRouter,
   // useHistory,
 } from 'react-router-dom';
-import './sideMenu.css';
 
 const { Sider } = Layout;
 
 const SideMenu = React.memo(props => {
   const history = props.history;
   const selectKeys = [props.location.pathname];
-  console.log(selectKeys);
   const openKeys = ['/' + props.location.pathname.split('/')[1]];
   const [collapsed, setCollapsed] = useState(false);
   const [menuList, setMenuList] = useState([]);
@@ -21,8 +19,13 @@ const SideMenu = React.memo(props => {
     history.push(selector.key);
   };
 
+  const {
+    role: { rights },
+  } = JSON.parse(localStorage.getItem('token'));
+
   // todo 思考如何优雅处理数据
   const handleMenuListData = dataList => {
+    dataList = dataList.filter(item => item?.pagepermisson && rights.includes(item.key));
     for (let i = 0; i < dataList.length; i++) {
       if (!dataList[i]?.children?.length) {
         delete dataList[i].children;
@@ -37,7 +40,8 @@ const SideMenu = React.memo(props => {
   useEffect(() => {
     axios.get('http://localhost:5000/rights?_embed=children').then(res => {
       const newData = handleMenuListData(res?.data);
-      setMenuList(newData);
+      const copyData = JSON.parse(JSON.stringify(newData).replace(/title/gi, 'label'));
+      setMenuList(copyData);
     });
   }, []);
   return (
@@ -66,40 +70,3 @@ const SideMenu = React.memo(props => {
 });
 
 export default withRouter(SideMenu);
-
-// const menuList = [
-//   {
-//     key: '/home',
-//     label: '首页',
-//     icon: null,
-//   },
-//   {
-//     key: '/user-manage',
-//     label: '用户管理',
-//     icon: null,
-//     children: [
-//       {
-//         key: '/user-manage/list',
-//         label: '用户列表',
-//         icon: null,
-//       },
-//     ],
-//   },
-//   {
-//     key: '/right-manage',
-//     label: '权限管理',
-//     icon: null,
-//     children: [
-//       {
-//         key: '/right-manage/role/list',
-//         label: '角色列表',
-//         icon: null,
-//       },
-//       {
-//         key: '/right-manage/right/list',
-//         label: '权限列表',
-//         icon: null,
-//       },
-//     ],
-//   },
-// ];
